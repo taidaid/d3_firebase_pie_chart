@@ -31,8 +31,27 @@ const legendGroup = svg
 
 const legend = d3
   .legendColor()
-  .shape("circle")
+  .shape(
+    "path",
+    d3
+      .symbol()
+      .type(d3.symbolCircle)
+      .size(200)()
+  ) // can also just use .shape('circle)
+  .shapePadding(15)
   .scale(color);
+
+const tip = d3
+  .tip()
+  .attr("class", "tip card")
+  .html(d => {
+    let content = `<div class='name'>${d.data.name}</div>`;
+    content += `<div class='cost'>${d.data.cost}</div>`;
+    content += `<div class='delete'>Click slice to delete</div>`;
+    return content;
+  });
+
+graph.call(tip);
 
 // update function
 const update = data => {
@@ -91,6 +110,19 @@ const update = data => {
     .transition()
     .duration(750)
     .attrTween("d", arcTweenEnter);
+
+  // add events
+  graph
+    .selectAll("path")
+    .on("mouseover", (d, i, n) => {
+      tip.show(d, n[i]);
+      handleMouseOver(d, i, n);
+    })
+    .on("mouseout", (d, i, n) => {
+      tip.hide(d, n[i]);
+      handleMouseOut(d, i, n);
+    })
+    .on("click", handleClick);
 };
 
 // data array and firestore
@@ -146,3 +178,29 @@ function arcTweenUpdate(d) {
     return arcPath(i(t));
   };
 }
+
+// event handlers
+// hover event handler, can also be built using function keyword and 'this'
+const handleMouseOver = (d, i, n) => {
+  //   console.log(i, n[i]);
+
+  d3.select(n[i])
+    .transition("changeSliceFill")
+    .duration(300)
+    .attr("fill", "#f00");
+};
+
+const handleMouseOut = (d, i, n) => {
+  d3.select(n[i])
+    .transition("changeSliceFill")
+    .duration(300)
+    .attr("fill", color(d.data.name));
+};
+
+const handleClick = d => {
+  const { id } = d.data;
+
+  db.collection("expenses")
+    .doc(id)
+    .delete();
+};
