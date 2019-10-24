@@ -32,4 +32,9 @@ const angles = pie([
   }
 ]);
 
-console.log(angles);
+const arcPath = d3
+  .arc()
+  .outerRadius(dimensions.radius)
+  .innerRadius(dimensions.radius / 2);
+
+console.log(arcPath(angles[0]));
