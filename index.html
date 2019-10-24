@@ -22,7 +22,7 @@
   <body class="indigo">
     <header class="indigo darken-1 section">
       <h2 class="center white-text">Bills Tracker</h2>
-      <p class="flow-text grey-text center ext-lighten-2">
+      <p class="flow-text grey-text center text-lighten-2">
         Monthly Bills Tracker
       </p>
     </header>
@@ -79,11 +79,16 @@
       firebase.analytics();
       const db = firebase.firestore();
     </script>
-    <script src="https://d3js.org/d3.v5.min.js"></script>
-    <script src="index.js"></script>
-    <script src="graph.js"></script>
-
     <!-- Compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js"
+      integrity="sha256-qo76Vs9B6JAALbrTn+PcN1r09hbNLd2M78V19glOMeU="
+      crossorigin="anonymous"
+    ></script>
+    <!--source files for chart and form-->
+    <script src="index.js"></script>
+    <script src="graph.js"></script>
   </body>
 </html>

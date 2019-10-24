@@ -24,14 +24,37 @@ const arcPath = d3
 // sets a color() function with chosen color scheme
 const color = d3.scaleOrdinal(d3.schemeSet3);
 
+// legend setup
+const legendGroup = svg
+  .append("g")
+  .attr("transform", `translate(${dimensions.width + 40}, ${10})`);
+
+const legend = d3
+  .legendColor()
+  .shape("circle")
+  .scale(color);
+
 // update function
 const update = data => {
   // update color scale domain
   color.domain(data.map(d => d.name));
+
+  //update and call legend
+  legendGroup
+    .call(legend)
+    .attr("stroke", "#fff")
+    .attr("stroke-width", 1)
+    .selectAll("text")
+    .attr("fill", "white")
+    .style("font-size", "1.5rem")
+    .attr("stroke-width", 0.25);
+
+  legendGroup.selectAll(".cell").style("margin", 50);
+
   // join enhanced (pie) data to path elements
   const paths = graph.selectAll("path").data(pie(data));
 
-  // TODO: handle the exit selection
+  // handle the exit selection
   paths
     .exit()
     .transition()
@@ -39,7 +62,7 @@ const update = data => {
     .attrTween("d", arcTweenExit)
     .remove();
 
-  // TODO: handle the current DOM path updates
+  // handle the current DOM path updates
   paths
     .attr("class", "arc")
     .attr("d", arcPath) // The 'd' refers to <path d="">
